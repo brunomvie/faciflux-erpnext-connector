@@ -1,0 +1,1 @@
+recursive-include faciflux_erpnext_connector *.json *.py
