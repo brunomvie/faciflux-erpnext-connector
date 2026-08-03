@@ -20,12 +20,13 @@ def _document_payload(doc):
 def _record_event(doc, action):
     event_id = str(uuid.uuid4())
     payload = _document_payload(doc)
+    occurred_at = datetime.now(timezone.utc)
     event = {
         "event_id": event_id,
         "event_type": _event_type(doc, action),
         "schema_version": "1",
         "producer": "erpnext",
-        "occurred_at": datetime.now(timezone.utc).isoformat(),
+        "occurred_at": occurred_at.isoformat(),
         "aggregate": {
             "type": doc.doctype,
             "id": doc.name,
@@ -44,7 +45,7 @@ def _record_event(doc, action):
         "aggregate_id": doc.name,
         "aggregate_version": event["aggregate"]["version"],
         "correlation_id": event["correlation_id"],
-        "occurred_at": event["occurred_at"],
+        "occurred_at": occurred_at.strftime("%Y-%m-%d %H:%M:%S.%f"),
         "payload_json": payload_json,
         "payload_checksum": hashlib.sha256(payload_json.encode("utf-8")).hexdigest(),
         "status": "Pending",
