@@ -1,0 +1,10 @@
+ARG ERPNEXT_VERSION=v16.22.0
+FROM frappe/erpnext:${ERPNEXT_VERSION}
+
+# The Frappe Docker services do not share their /apps filesystem.  Package the
+# connector into the image so web, workers, scheduler, and websocket all run
+# the same application release.
+USER frappe
+COPY --chown=frappe:frappe . /home/frappe/frappe-bench/apps/faciflux_erpnext_connector
+RUN /home/frappe/frappe-bench/env/bin/pip install --no-cache-dir --no-deps \
+  -e /home/frappe/frappe-bench/apps/faciflux_erpnext_connector
